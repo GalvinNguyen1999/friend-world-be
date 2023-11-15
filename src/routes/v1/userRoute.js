@@ -1,6 +1,7 @@
 import express from 'express'
 import { userValidation } from '~/validations/userValidation'
 import { userController } from '~/controllers/userController'
+import { verifyToken } from '~/middlewares/verifyToken'
 
 const Route = express.Router()
 
@@ -13,7 +14,7 @@ Route.route('/login')
 
 // Get All User
 Route.route('/all')
-  .get(userController.getAllUser)
+  .get(verifyToken, userController.getAllUser)
 
 // Update User
 Route.route('/:userId')
