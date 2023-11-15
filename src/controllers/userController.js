@@ -1,5 +1,6 @@
 import { StatusCodes } from 'http-status-codes'
 import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
 import { userService } from '~/services/userService'
 
 const createNew = async (req, res) => {
@@ -20,7 +21,9 @@ const login = async (req, res) => {
 
     if (!checkPassword) return res.status(StatusCodes.BAD_REQUEST).send('Email or Password is not correct')
 
-    return res.status(StatusCodes.OK).json(user)
+    const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET, { expiresIn: 60 * 60 * 24 })
+
+    return res.header('auth-token', token).send(token)
   } catch (error) { throw new Error(error) }
 }
 
